@@ -15,10 +15,18 @@
       height: 500px;
       margin: 20px auto;
       border: 1px solid #ccc;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
     }
     input, button {
       padding: 10px;
       margin: 5px;
+    }
+    span {
+      text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -30,18 +38,34 @@
   <div id="word-cloud"></div>
   
   <script>
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
     function generateWordCloud() {
-      const words = document.getElementById('words').value.split(' ');
+      const words = document.getElementById('words').value.split(' ').filter(word => word.trim() !== '');
       const container = document.getElementById('word-cloud');
       container.innerHTML = ''; // Clear previous word cloud
-      
-      words.forEach(word => {
+
+      if (words.length === 0) {
+        alert('Please enter some words to create a word cloud.');
+        return;
+      }
+
+      const colors = ['#182B49', '#FDB515', '#00629B', '#767676'];
+      const shuffledWords = shuffleArray(words);
+
+      shuffledWords.forEach((word, index) => {
         const span = document.createElement('span');
         span.textContent = word;
-        span.style.fontSize = `${Math.random() * 30 + 10}px`;
+        span.style.fontSize = index < 4 ? `${Math.random() * 20 + 40}px` : `${Math.random() * 20 + 10}px`; // Larger size for top 4
         span.style.margin = '5px';
+        span.style.color = colors[index % colors.length];
         span.style.display = 'inline-block';
-        span.style.color = `hsl(${Math.random() * 360}, 70%, 50%)`;
         container.appendChild(span);
       });
     }
